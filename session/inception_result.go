@@ -264,9 +264,17 @@ func (r *recordSet) Close() error {
 
 func (r *recordSet) CreateFiled(name string, tp uint8) {
 	n := model.NewCIStr(name)
+	ft := types.NewFieldType(tp)
+	if types.IsString(tp) {
+		ft.Charset = "utf8mb4"
+		ft.Collate = "utf8mb4_general_ci"
+	} else {
+		ft.Charset = "binary"
+		ft.Collate = "binary"
+	}
 	r.fields[r.fieldCount] = &ast.ResultField{
 		Column: &model.ColumnInfo{
-			FieldType: *types.NewFieldType(tp),
+			FieldType: *ft,
 			Name:      n,
 		},
 		ColumnAsName: n,
