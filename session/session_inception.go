@@ -82,7 +82,7 @@ func (s *session) ExecuteInc(ctx context.Context, sql string) (recordSets []sqle
 	// 跳过mysql客户端发送的sql
 	// 跳过tidb测试时发送的sql
 
-	lowerSql := strings.ToLower(sql)
+	lowerSql := strings.TrimRight(strings.ToLower(sql), "; ")
 	for _, ignore := range skipSqlList {
 		if ignore == lowerSql {
 			return s.execute(ctx, sql)
