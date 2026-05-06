@@ -5397,12 +5397,10 @@ func (s *session) checkModifyColumn(t *TableInfo, c *ast.AlterTableSpec) {
 		// 列类型转换审核
 		fieldType := nc.Tp.CompactStr()
 		if s.inc.CheckColumnTypeChange && fieldType != foundField.Type {
-			if s.dbType == DBTypeOceanBase {
-				s.appendErrorNo(ER_CANT_CHANGE_COLUMN_TYPE,
-					fmt.Sprintf("%s.%s", t.Name, nc.Name.Name),
-					foundField.Type, fieldType)
-				return
-			}
+			// OceanBase 沿用 MySQL 的精细判断逻辑：varchar/decimal 同类型扩长允许、
+			// 缩长/换类型告警；int 家族升级允许；enum/set 同基类型允许。
+			// 之前 OceanBase 分支一刀切禁止任何类型变更过于保守，OceanBase 原生
+			// 支持 varchar 在线扩长等 online DDL，没有理由禁止安全的扩长操作。
 			switch nc.Tp.Tp {
 			case mysql.TypeDecimal, mysql.TypeNewDecimal,
 				mysql.TypeVarchar,
