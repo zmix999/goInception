@@ -193,7 +193,8 @@ func (s *testCommon) initSetUp(c *C) {
 
 	// mysql5.6测试用例会出错(docker映射对外的端口不一致)
 	config.GetGlobalConfig().Ghost.GhostAliyunRds = true
-
+	// 兼容gh-ost 1.8
+	config.GetGlobalConfig().Ghost.GhostSkipMetadataLockCheck = true
 	s.defaultInc = *inc
 	s.defaultIncLevel = *incLevel
 
