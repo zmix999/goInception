@@ -9212,6 +9212,9 @@ func (s *session) checkFieldItem(name *ast.ColumnName, tables []*TableInfo) bool
 		if t.IsCte {
 			return true
 		}
+		if t.IsVirtFunc {
+			return  true
+		}
 		if name.Table.L != "" {
 			if name.Table.L != "" && (db == "" || strings.EqualFold(t.Schema, db)) &&
 				(strings.EqualFold(tName, name.Table.L)) {
@@ -10388,7 +10391,12 @@ func (s *session) checkSelectItem(node ast.ResultSetNode,
 		default:
 			return s.checkSelectItem(tblSource, nil, false, cmmonTable)
 		}
-
+	case *ast.FuncCallExpr:
+		t := &TableInfo{
+			Schema: "",
+			IsVirtFunc:   true,
+		}
+		return []*TableInfo{t}
 	default:
 		log.Infof("con:%d %T", s.sessionVars.ConnectionID, x)
 	}
@@ -10447,6 +10455,12 @@ func (s *session) checkSubSelectItem(node *ast.SelectStmt, outerTables []*TableI
 				}
 				tableInfoList = append(tableInfoList, t)
 			}
+		case *ast.FuncCallExpr:
+			t := &TableInfo{
+				Schema: "",
+				IsVirtFunc:   true,
+			}
+			tableInfoList = append(tableInfoList, t)
 		default:
 			log.Infof("con:%d %T", s.sessionVars.ConnectionID, x)
 			tableInfoList = append(tableInfoList, s.checkSelectItem(tblSource, nil, false, "")...)

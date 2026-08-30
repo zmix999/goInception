@@ -347,7 +347,10 @@ type TableInfo struct {
 	Options       []*TableOptionInfo
 	// row size limit
 	RowSize int
+	// CTE 公共表达式
 	IsCte   bool
+	// JSON Table Functions
+	IsVirtFunc bool
 }
 
 type RoutineInfo struct {
