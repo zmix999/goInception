@@ -79,7 +79,7 @@ jobs:
 
       - name: Install gh-ost
         run: |
-          sudo wget -O gh-ost.tar.gz https://github.com/github/gh-ost/releases/download/v1.1.7/gh-ost-binary-linux-amd64-20241219160321.tar.gz
+          sudo wget -O gh-ost.tar.gz https://github.com/github/gh-ost/releases/download/v1.1.8/gh-ost-binary-linux-amd64-20260310200531.tar.gz
           sudo tar -zxvf gh-ost.tar.gz -C /usr/local/bin/
           sudo chmod +x /usr/local/bin/gh-ost
 
